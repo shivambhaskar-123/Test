@@ -380,6 +380,101 @@ export class AttributeAddComponent implements OnInit {
 	</div>
 </div>
 
+
+----attribute add component css-------------------
+
+@import "../../../../../../../host/src/assets/styles/variable.scss";
+
+.add-attributes-page {
+  @include page-height-one;
+
+  .add-attributes-inner {
+    @include page-sub-height-one;
+    overflow-y: auto;
+
+    @media (max-width: 1199px) {
+      padding: 0 10px 65px 10px;
+    }
+  }
+
+  .grid-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px -7.5px 0 -7.5px;
+
+    .grid-column {
+      flex-basis: 33.33%;
+      max-width: 33.33%;
+      padding: 0 7.5px;
+      box-sizing: border-box;
+
+      @media (max-width: 991px) {
+        flex-basis: 50%;
+        max-width: 50%;
+      }
+
+      &.mobile-grid-column {
+        @media (max-width: 575px) {
+          flex-basis: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  .field-outer {
+    border: 1px dashed #c9c9c9;
+    border-radius: 3px;
+    background: $sky-three;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    .field_grp_area{
+      width: 85%;
+      @media(max-width:1440px){
+        width: 80%;
+      }
+    }
+    .mat-mdc-form-field {
+      margin-bottom: 0;
+    
+    }
+    button{
+        padding: 0;
+        margin-left: 10px;
+        &:hover{
+          .mat-icon{
+              color: $primary-color;
+          }
+      }
+        .mat-icon{
+            color: $secondary-color;
+            font-size: 18px;
+            height: 18px;
+            width: 18px;
+        }
+    }
+    .edit-dlt{
+        width: calc(100% - 85%);
+        display: flex;
+        justify-content: end;
+        @media(max-width:1440px){
+            width: calc(100% - 80%);
+          }
+    }
+  }
+}
+.multiple_option{
+  ::ng-deep{
+  .mat-pseudo-checkbox-checked{
+    background-color: $primary-color !important;
+  }
+}
+}
+
+
 //===============================
 
 export class CategoryCustomfieldDialogComponent implements OnInit {
@@ -817,3 +912,264 @@ export class CategoryCustomfieldDialogComponent implements OnInit {
     </div>
   </div>
 </div>
+
+---custom field dialog css----
+::ng-deep {
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option .ng-tag-label {
+        padding-right: 5px;
+        font-size: 98%;
+        font-weight: 400;
+        color: #1AB1D2;
+    }
+
+    .disabled-checkbox {
+        pointer-events: none;
+        opacity: 0.5;
+
+        .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+            pointer-events: none;
+        }
+
+        .mat-mdc-form-field .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label.mdc-floating-label--float-above {
+            pointer-events: none;
+        }
+
+        /* You can adjust the opacity value */
+    }
+}
+
+@import '../../../../../../../host/src/assets/styles/variable.scss';
+
+.add-color-modal {
+
+    // width: 100%;
+    // min-width: 600px;
+    // overflow: hidden;
+    // @media(max-width:991px){
+    //     min-width: auto;
+    //     max-width: 600px;
+    // }
+    .grid-row {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0px -7.5px 0 -7.5px;
+
+        .grid-column {
+            flex-basis: 50%;
+            max-width: 50%;
+            padding: 0 7.5px;
+            box-sizing: border-box;
+
+            @media(max-width:767px) {
+                flex-basis: 100%;
+                max-width: 100%;
+            }
+        }
+    }
+
+    .close_btn {
+        ::ng-deep {
+            .mat-icon {
+                color: rgba(0, 0, 0, 0.6);
+            }
+        }
+    }
+
+    .modal-body {
+        height: 276px;
+        overflow-y: auto;
+
+        ::ng-deep {
+            .ng-select {
+                padding-bottom: 0;
+            }
+
+            .ng-value {
+                border: none;
+                border-radius: 0px;
+                background-color: transparent !important;
+            }
+
+            .ng-input {
+                input {
+                    padding: 0 10px !important;
+                    box-sizing: border-box !important;
+                }
+            }
+
+            .ng-select .ng-select-container.ng-appearance-outline:after {
+                border: none !important;
+
+            }
+
+            .ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-clear-wrapper {
+                bottom: 0px !important;
+            }
+
+            .ng-select.ng-select-single .ng-select-container.ng-appearance-outline .ng-arrow-wrapper {
+                bottom: 3px !important;
+            }
+        }
+
+        .row_cls {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -5px;
+
+            .col-lg-6 {
+                flex-basis: 50%;
+                max-width: 50%;
+                padding: 0 5px;
+
+                @media(max-width:991px) {
+                    flex-basis: 100%;
+                    max-width: 100%;
+                }
+            }
+        }
+
+    }
+
+    .modal-footer {
+        padding: 15px;
+        border-top: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+
+    }
+
+    .check-list-opt {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        >div {
+            margin-right: 15px;
+            margin-left: 8px;
+        }
+    }
+
+    .check-area {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        span {
+            color: $field-label;
+            font-size: 14px;
+            font-weight: 400;
+            padding-left: 10px;
+            line-height: 1.5;
+        }
+
+        ::ng-deep {
+            .mdc-checkbox {
+                padding: 0px;
+            }
+
+            .mdc-checkbox__background {
+                top: 0;
+                left: 0;
+                border: 1px solid $checkbox !important;
+                background-color: $white !important;
+            }
+
+            .mat-mdc-checkbox-checked {
+                .mdc-checkbox__background {
+                    border-color: $secondary-color !important;
+                    background-color: $secondary-color !important;
+                }
+            }
+
+            .mat-mdc-checkbox-touch-target {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    }
+
+
+
+    .modal_btn {
+        display: flex;
+        align-items: center;
+
+
+
+        button {
+            margin-right: 10px;
+
+        }
+
+        .cancel_btn {
+            border: 1px solid $secondary-color;
+            box-shadow: none;
+
+            &:hover {
+                background-color: $secondary-color;
+            }
+        }
+
+        .add_btn {
+            width: auto;
+            margin-top: 0;
+            padding: 10px 18px;
+            font-size: 12px;
+
+
+        }
+    }
+
+    .text-area-portion {
+        textarea {
+            height: 36px !important;
+            resize: none;
+            min-height: auto !important;
+        }
+
+        ::ng-deep {
+            .mat-mdc-text-field-wrapper {
+                height: 56px !important;
+
+                textarea {
+                    height: 36px !important;
+                    resize: none;
+                }
+            }
+
+            .mat-mdc-form-field-infix {
+                min-height: auto;
+                height: 36px;
+            }
+        }
+    }
+
+    .grid-row-sub {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+    }
+
+    .sm-btn {
+        padding: 0;
+        height: 27px;
+
+        .mat-icon {
+            color: $grey-color-seven;
+        }
+    }
+
+    .disable_txt {
+        opacity: 0.5;
+    }
+
+    .field_part_check {
+        @media(max-width:575px) {
+            width: 40%;
+        }
+    }
+}
