@@ -1173,3 +1173,359 @@ export class CategoryCustomfieldDialogComponent implements OnInit {
         }
     }
 }
+
+
+
+--------Form generating-----------------------
+
+  <!-- Showing custom fields which are non-filterable with loan details -->
+                <ng-container *ngFor="let template of attributesForm(i).controls; let j = index">
+                  <ng-container *ngIf="!checkIsCustomFieldFilterable(template)">
+                    <ng-container
+                      *ngTemplateOutlet="myTemplate; context: { attribute:template, index: j,loanIndex:i,isProductSearchable:false}"></ng-container>
+                  </ng-container>
+                </ng-container>
+                <!-- ends  here -->
+
+
+  // template
+
+  <ng-template #customFieldsTemplate let-attribute="attribute" let-index="index" let-loanIndex="loanIndex"
+          let-isProductSearchable="isProductSearchable">
+          <ng-container formArrayName="loanDetails">
+            <ng-container [formGroupName]="loanIndex">
+              <ng-container formArrayName="childAttributes">
+                <ng-container [formGroupName]="index">
+
+                  <div *ngIf="showField('Text box',getAttributeData(attribute)?.CFF_TYP_NM) && !isProductSearchable"
+                    class="grid-column-two mobile-grid-column">
+                    <mat-form-field appearance="outline">
+                      <mat-label class="mdc-floating-label--float-above"
+                        *ngIf="getAttributeData(attribute)?.BA_CFF_LBL">{{getAttributeData(attribute)?.BA_CFF_LBL}}</mat-label>
+                      <input matInput [value]="checkField(attribute, index)"
+                        [formControlName]="getAttributeData(attribute)?.BA_CFF_NM">
+                    </mat-form-field>
+                    <mat-error class="text-danger" text-align="right" align="end"
+                      *ngIf="attribute?.get(getAttributeData(attribute)?.BA_CFF_NM)?.invalid && formSubmitted">
+                      {{getAttributeData(attribute)?.BA_CFF_NM}} {{'loan.createLoan.fieldRequired' | translate }}
+                    </mat-error>
+                  </div>
+                  <!-- Date -->
+                  <div class="grid-column-two mobile-grid-column"
+                    *ngIf="showField('Date Picker',getAttributeData(attribute)?.CFF_TYP_NM) && !isProductSearchable">
+                    <mat-form-field appearance="outline">
+                      <mat-label class="mdc-floating-label--float-above"
+                        *ngIf="getAttributeData(attribute)?.BA_CFF_LBL">{{getAttributeData(attribute)?.BA_CFF_LBL}}</mat-label>
+                      <input matInput [value]="checkField(attribute)"
+                        [formControlName]="getAttributeData(attribute)?.BA_CFF_NM" />
+                    </mat-form-field>
+                  </div>
+                  <!-- Text Area -->
+                  <div class="grid-column-two mobile-grid-column"
+                    *ngIf="showField('Text Area',getAttributeData(attribute)?.CFF_TYP_NM) && checkIsShowCustomField(checkIsCustomFieldFilterable(attribute),isProductSearchable)">
+                    <mat-form-field class="custom-textarea" appearance="outline" appearance="outline">
+                      <mat-label lass="mdc-floating-label--float-above"
+                        *ngIf="getAttributeData(attribute)?.BA_CFF_LBL">{{getAttributeData(attribute)?.BA_CFF_LBL}}</mat-label>
+                      <textarea matInput cdkTextareaAutosize #description cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"
+                        [formControlName]="getAttributeData(attribute)?.BA_CFF_NM"
+                        [value]="checkField(attribute)"></textarea>
+
+                    </mat-form-field>
+                  </div>
+                  <!-- Drop Down -->
+                  <ng-container
+                    *ngIf="checkIsShowCustomField(checkIsCustomFieldFilterable(attribute),isProductSearchable)">
+
+                    <div [ngClass]="{'grid-column-two mobile-grid-column':!isProductSearchable}"
+                      *ngIf="showField('Dropdown',getAttributeData(attribute)?.CFF_TYP_NM) &&
+                         !(showField('Color',getAttributeData(attribute)?.BA_CFF_NM) || showField('Size',getAttributeData(attribute)?.BA_CFF_NM))">
+                      <mat-form-field class="field-drop" appearance="outline">
+                        <mat-label
+                          *ngIf="getAttributeData(attribute)?.BA_CFF_LBL">{{getAttributeData(attribute)?.BA_CFF_LBL}}</mat-label>
+                        <mat-select formControlName="D_CFF_VAL">
+                          <mat-option class="select-drop-option"
+                            *ngFor="let fitem of getAttributeData(attribute)?.custom_value"
+                            [value]="fitem?.MRHRC_TMP_CNT_VL ? fitem?.MRHRC_TMP_CNT_VL :fitem?.CFF_VAL">{{fitem?.MRHRC_TMP_CNT_VL
+                            ? fitem?.MRHRC_TMP_CNT_VL :fitem?.CFF_VAL}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-error class="text-danger" text-align="right" align="end"
+                        *ngIf="attribute?.get('D_CFF_VAL')?.invalid && formSubmitted">
+                        {{'loan.createLoan.thisFieldIsRequired' | translate }}
+                      </mat-error>
+                    </div>
+                  </ng-container>
+                  <!-- Multi Drop Down -->
+                  <div
+                    *ngIf="showField('Dropdown Multiselect',getAttributeData(attribute)?.CFF_TYP_NM) && checkIsShowCustomField(checkIsCustomFieldFilterable(attribute),isProductSearchable)">
+                    <mat-form-field class="field-drop multiple_option" appearance="outline" readonly='true'>
+                      <mat-label class="mdc-floating-label--float-above"
+                        *ngIf="getAttributeData(attribute)?.BA_CFF_LBL">{{getAttributeData(attribute)?.BA_CFF_LBL}}</mat-label>
+                      <mat-select formControlName="DM_CFF_VAL" [multiple]="true">
+                        <mat-option class="select-drop-option"
+                          [value]="fitem?.MRHRC_TMP_CNT_VL ? fitem?.MRHRC_TMP_CNT_VL :fitem?.CFF_VAL"
+                          *ngFor="let fitem of getAttributeData(attribute).custom_value">{{ fitem?.MRHRC_TMP_CNT_VL ?
+                          fitem?.MRHRC_TMP_CNT_VL :fitem?.CFF_VAL }}
+                          <mat-checkbox *ngIf="false" [checked]="fitem.isdefault">{{ fitem?.MRHRC_TMP_CNT_VL ?
+                            fitem?.MRHRC_TMP_CNT_VL :fitem?.CFF_VAL }}</mat-checkbox>
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <!-- Size -->
+                  <div *ngIf="showField('Size',getAttributeData(attribute)?.BA_CFF_NM) && 
+                    showField('Dropdown',getAttributeData(attribute)?.CFF_TYP_NM) && 
+                    checkIsShowCustomField(checkIsCustomFieldFilterable(attribute),isProductSearchable)">
+                    <mat-form-field appearance="outline" color="primary" class="field-drop" readonly='true'>
+                      <mat-label> {{'loan.createLoan.size' | translate }} </mat-label>
+                      <mat-select formControlName="Size">
+                        <mat-option class="select-drop-option" value="">
+                          {{'loan.createLoan.selectSize' | translate }}
+                        </mat-option>
+                        <mat-option class="select-drop-option" *ngFor="let size of allSizeData" [value]="size.NM_TB_SZ">
+                          {{size.NM_TB_SZ}}
+                        </mat-option>
+
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <!-- Color -->
+                  <div *ngIf="showField('Color',getAttributeData(attribute)?.BA_CFF_NM) && 
+                    showField('Dropdown',getAttributeData(attribute)?.CFF_TYP_NM) && 
+                    checkIsShowCustomField(checkIsCustomFieldFilterable(attribute),isProductSearchable)">
+                    <mat-form-field appearance="outline" color="primary" class="field-drop">
+                      <mat-label>{{'loan.createLoan.color' | translate }}</mat-label>
+                      <mat-select (valueChange)="onAddColorSize('color','add', $event)" formControlName="Color">
+                        <mat-option class="select-drop-option" value="">
+                          {{'loan.createLoan.selectColor' | translate }}
+                        </mat-option>
+                        <mat-option class="select-drop-option" *ngFor="let color of allColorData"
+                          [value]="color.NM_CLR">
+                          {{color.NM_CLR}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+
+ // needed function in ts file
+
+  showField(fieldName: string, currentField: string) {
+    if (!currentField) return false;
+    return fieldName?.trim()?.toLowerCase() === currentField?.trim()?.toLowerCase();
+  }
+
+  getAttributeData(data: any, index?: number) {
+    return data?.get('attr')?.value;
+  }
+
+    checkField(data: any, index?: number) {
+
+    const formData = data?.get('attr')?.value;
+    // get the form value
+    let value = formData?.custom_value[0]?.MRHRC_TMP_CNT_VL ? formData?.custom_value[0]?.MRHRC_TMP_CNT_VL : formData?.custom_value[0]?.CFF_VAL;
+    // get date format from service
+    if (formData?.CFF_TYP_NM == 'Date Picker' && value) {
+      return this.commonService.extractDateFromDatePicker(value)
+    }
+    return value;
+  }
+
+  checkIsShowCustomField(isFilterableField: boolean, isFieldProductSearchable: boolean) {
+    if (isFieldProductSearchable) {
+      return isFilterableField;
+    } else {
+      return !isFilterableField;
+    }
+  }
+
+   checkIsCustomFieldFilterable(data: any) {
+    const formData = data?.get('attr')?.value;
+    return formData?.isfilterable;
+  }
+
+  addAttributeFormArray(array: any[], index: number, isEditPage?: boolean) {
+    const control = this.attributesForm(index);
+    // iterate through the loop to get the custum attribute value
+    array.forEach((x: any, _index: number) => {
+      // dval form dropdowns
+      let dval = null;
+      let defaultVal = null;
+      const textFieldValidators: ValidatorFn | ValidatorFn[] = [];
+      const dropdownFieldValidators: ValidatorFn | ValidatorFn[] = [];
+      const multiDropdownFieldValidators: ValidatorFn | ValidatorFn[] = [];
+      let fmval: string[] = []
+      // get default value of multidropdown
+      if (x.CFF_TYP_NM == 'Dropdown Multiselect') {
+        fmval = this.addDropMultiToTemp(index, x, isEditPage)
+      }
+      // get default value of normal input
+      if (x.CFF_TYP_NM == 'Text Box' || x.CFF_TYP_NM == 'Text Area' || x.CFF_TYP_NM == 'Date Picker') {
+        if (x?.ismandatory) {
+          textFieldValidators.push(Validators.required); // Add required validator
+        }
+        defaultVal = this.addTemplateValue(index, x, isEditPage)
+      }
+      // get default value of dropdown
+      if (x.CFF_TYP_NM == 'Dropdown') {
+        if (x?.ismandatory) {
+          dropdownFieldValidators.push(Validators.required); // Add required validator
+        }
+        dval = this.addDropDownToTemp(index, x, isEditPage)
+      }
+
+      // assign these values to the form
+      const attributesControl: FormGroup = new FormGroup({
+        attr: new FormControl(x),
+        [x.BA_CFF_NM]: new FormControl(defaultVal, textFieldValidators),
+        D_CFF_VAL: new FormControl(dval, dropdownFieldValidators),
+        CFF_TYP_NM: new FormControl(x.CFF_TYP_NM),
+        isFilterable: new FormControl(x?.isfilterable),
+        DM_CFF_VAL: new FormControl([...fmval], multiDropdownFieldValidators),
+      });
+      control.push(attributesControl);
+    });
+
+    console.log('form--', this.form)
+
+  }
+
+   attributesForm(index: number): FormArray {
+    return this.loanDetailsForm.controls[index].get('childAttributes') as FormArray;
+  }
+
+   addDropMultiToTemp(index: number, temp?: any, isEditPage?: boolean) {
+    let arr: any[] = []
+    if (!isEditPage) {
+      for (let value of temp.custom_value) {
+        if (value.isdefault) {
+          arr.push(value?.MRHRC_TMP_CNT_VL ? value?.MRHRC_TMP_CNT_VL : value?.CFF_VAL)
+        }
+      }
+    } else {
+      const value = this.getPatchedCustomFieldValue(index)?.find((x: any) => x?.NM_BA_CFF == temp?.BA_CFF_NM)?.BA_CFF_VAL;
+      arr = value?.toString().includes(',') ? [...(value?.toString()?.split(',') ?? [])] : [value];
+      console.log('array-----', arr);
+    }
+
+    return arr;
+  }
+
+   getPatchedCustomFieldValue(index: number): any[] {
+    return this.loanDetailsForm.controls[index].get('selectedProductAttributes')?.value;
+  }
+
+  addTemplateValue(index: number, temp: any, isEditPage?: boolean) {
+    const currentValue = temp?.custom_value[0];
+    let data: any;
+    if (!isEditPage) {
+      data = currentValue?.MRHRC_TMP_CNT_VL ? currentValue.MRHRC_TMP_CNT_VL : currentValue?.CFF_VAL;
+    } else {
+      data = this.getPatchedCustomFieldValue(index)?.find((x: any) => x?.NM_BA_CFF == temp?.BA_CFF_NM)?.BA_CFF_VAL;
+    }
+
+    return data;
+  }
+
+   addDropDownToTemp(index: number, temp: any, isEditPage?: boolean) {
+    if (!isEditPage) {
+      for (let value of temp.custom_value) {
+        if (value.isdefault) {
+          return value?.MRHRC_TMP_CNT_VL ? value?.MRHRC_TMP_CNT_VL : value?.CFF_VAL;
+        }
+      }
+    } else {
+      return this.getPatchedCustomFieldValue(index)?.find((x: any) => x?.NM_BA_CFF == temp?.BA_CFF_NM)?.BA_CFF_VAL;
+    }
+  }
+
+   makeForm() {
+
+    this.form = this.fb.group({
+      ID_STR: [{ disabled: true, value: '' }, []],
+      STORE_ID: ['', []],
+      QU_UN_TRN: [{ disabled: true, value: '' }, []],
+      LN_TYP: ['', [Validators.required]],
+      TOT_UN_TRN_AMT: [{ disabled: true, value: '' }, []],
+      TS_TRN_CRTN: [{ disabled: true, value: new Date().toISOString().split('T')[0] }, []],
+      customerDetails: this.fb.group({
+        customerId: ['', []],
+        ID_CRD_CUS: ['', []],
+        c_name: ['', [Validators.required]],
+        ID_UQ_CUS: ['', []],
+        ID_TX_CUS: ['', []],
+        EM_ADS: [{ disabled: true, value: '' }, []],
+        TL_PH: [{ disabled: true, value: '' }, []],
+        ID_CY_ITU: [{ disabled: true, value: '' }, []],
+        ID_ST: [{ disabled: true, value: '' }, []],
+        ID_TWSHP: [{ disabled: true, value: '' }, []],
+        ID_CT: [{ disabled: true, value: '' }, []],
+        STRT_CNCT: [{ disabled: true, value: '' }, []],
+        CLGN_CNCT: [{ disabled: true, value: '' }, []],
+        CD_PSTL: [{ disabled: true, value: '' }, []]
+      }),
+      loanDetails: this.fb.array([])
+    })
+    if (!this.isLoanEdit)
+      this.createLoanDetailsControl();
+    console.log('form-in---', this.form);
+  }
+
+
+  // in service
+
+   getcustomeFieldFormData(attributesForm:any[],formValue:any,allowOnlyNonFilterableFields:boolean=false){
+    let custom_field_list:any[] = []    
+    attributesForm.forEach((attribute:any,_index:number)=>{
+      let opt:any[]=[];
+      let val:any;
+      if(attribute?.attr.CFF_TYP_NM=="Dropdown" || attribute?.attr.CFF_TYP_NM=="Dropdown Multiselect"){
+        const optionSelectedValue=attribute?.attr.CFF_TYP_NM=="Dropdown" ? [attribute?.D_CFF_VAL] : attribute?.DM_CFF_VAL;
+        opt = optionSelectedValue?.length ? this.getOptValue(attribute):[];
+        val= opt?.length ? opt.map(x=>x?.NM_BA_CFF_VAL).toString() : null;
+      } else {
+        opt = [];
+        val = attribute[attribute?.attr?.BA_CFF_NM] ? attribute[attribute?.attr?.BA_CFF_NM]:null;
+      }
+     const isAllowAllFields=allowOnlyNonFilterableFields ? !attribute?.attr.isfilterable :true;
+      if((opt.length!=0 || val) && isAllowAllFields)
+      custom_field_list.push({
+        ID_MRHRC_GP: formValue?.ID_MRHRC_GP,
+        ID_MRHRC_TMP: attribute?.attr.ID_MRHRC_TMP,
+        ID_BA_CFF: attribute?.attr.ID_BA_CFF,
+        NM_MRHRC_TMP:attribute?.attr.MRHRC_TMP_NM,
+        NM_BA_CFF:attribute?.attr.BA_CFF_NM,
+        isFilterable:attribute?.attr.isfilterable,
+        options: opt,
+        BA_CFF_VAL: val
+      })
+    })
+    console.log('custom_field_list',custom_field_list)
+    return custom_field_list;
+  }
+
+  getOptValue(attribute:any){
+   return this.getCustomFieldValue(attribute?.attr.CFF_TYP_NM=="Dropdown" ? [attribute.D_CFF_VAL]:attribute.DM_CFF_VAL,attribute?.attr?.custom_value);
+  }
+
+  getCustomFieldValue(selectedValue:any[],customValues:any[]){
+    return customValues?.filter((x:any)=>selectedValue.includes(x?.MRHRC_TMP_CNT_VL)).map((y:any)=>{ return {
+      ID_MRHRC_TMP_CNT_VL: y.ID_MRHRC_TMP_CNT_VL,
+      NM_BA_CFF_VAL: y.MRHRC_TMP_CNT_VL? y.MRHRC_TMP_CNT_VL : y.CFF_VAL
+    }})
+  }
+
+  getLoanItemAttributesToSave(index: number) {
+    const loanItemSpecificCustomFields = this.loanManagementService.getcustomeFieldFormData(this.attributesForm(index).getRawValue(), { ID_MRHRC_GP: this.loanDetailsForm.controls[index]?.value?.ID_MRHRC_GP_CHLD }, true);
+    const productRelatedCustomFields = this.loanDetailsForm.controls[index].get('selectedProductAttributes')?.value?.filter((x: any) => (x?.isFilterable));
+    console.log('productRelatedCustomFields', productRelatedCustomFields)
+    const custom_field_list = [...loanItemSpecificCustomFields, ...productRelatedCustomFields];
+    console.log('custom_field_list', custom_field_list);
+    return custom_field_list;
+  }
